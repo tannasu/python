@@ -9,9 +9,19 @@ def open_csv(path):
 
 def load_mat(path):
     mat_files = sio.loadmat(path)
-    y_data = mat_files["y"]
-    X_data = mat_files["X"]
-    return y_data, X_data
+    return mat_files
+
+
+def resize_y_data(y_data):
+    y_len = len(y_data)
+    y_data_b = np.zeros([y_len, 10])
+    for _i in range(y_len):
+        _val = y_data[_i]
+        if _val < 10:
+            y_data_b[_i][_val] = 1
+        else:
+            y_data_b[_i][0] = 1
+    return y_data_b
 
 def create_data(csv_data, is_X=True):
     data_list = []
@@ -45,5 +55,19 @@ def stack_img_data(data_list, single_weight, img_block_size):
         else:
             img_data = np.row_stack((img_data, column_stack))
     return img_data
+
+def add_ones_row(data_arr):
+    data_shape = data_arr.shape
+
+    ones_arr = np.ones((1, data_shape[1]))
+    return np.row_stack((data_arr, ones_arr))
+
+def add_ones_col(data_arr):
+    print(type(data_arr))
+    data_shape = data_arr.shape
+    print(data_shape)
+    ones_arr = np.ones((data_shape[0], 1))
+    print(ones_arr.shape)
+    return np.column_stack((data_arr, ones_arr))
 
 #load_mat("data/ex3data1.mat")
